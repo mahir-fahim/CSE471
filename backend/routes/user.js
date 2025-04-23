@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 router.put("/profile/:id", async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, {
@@ -14,3 +16,5 @@ router.put("/profile/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+module.exports = router;
