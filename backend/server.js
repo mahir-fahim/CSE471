@@ -15,7 +15,8 @@ mongoose.connect("mongodb://localhost:27017/cse471")
 // Import and Use Routes
 const userRoutes = require("./routes/user");
 app.use("/api/user", userRoutes);
-
+app.use('/api', require('./routes/diet'));
+app.use('/api', require('./routes/workout'));
 // Start Server
 const PORT = 5000;
 app.listen(PORT, () => {
