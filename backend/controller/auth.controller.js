@@ -6,37 +6,67 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
 exports.signup = async (req, res) => {
-  try {
-    const { name, contact, email, gender, age, password, healthPlan, privacy } = req.body;
+	try {
+		const {
+			name,
+			contact,
+			email,
+			gender,
+			age,
+			password,
+			privacy,
+			height,
+			weight
+		} = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ $or: [{ email }, { contact }] });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User with this email or contact already exists.' });
-    }
+		// Check if user already exists
+		const existingUser = await User.findOne({
+			$or: [{ email }, { contact }],
+		});
+		if (existingUser) {
+			return res.status(400).json({
+				message: "User with this email or contact already exists.",
+			});
+		}
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+		// Calculate BMI
+		const heightInMeters = height / 100;
+		const bmi = +(weight / (heightInMeters * heightInMeters)).toFixed(1);
 
-    // Create and save new user
-    const newUser = new User({
-      name,
-      contact,
-      email,
-      gender,
-      age,
-      password: hashedPassword,
-      healthPlan,
-      privacy,
-    });
+		// Suggest workout plan
+		let healthPlan = "Custom";
+		if (bmi < 18.5) healthPlan = "Gain Weight Plan";
+		else if (bmi < 25) healthPlan = "Maintain Plan";
+		else if (bmi < 30) healthPlan = "Fat Burn Plan";
+		else healthPlan = "Intensive Fat Burn Plan";
 
-    await newUser.save();
-    res.status(201).json({ message: 'User registered successfully!' });
+		// Hash password
+		const hashedPassword = await bcrypt.hash(password, 10);
 
-  } catch (error) {
-    console.error('Signup error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+		// Create and save user
+		const newUser = new User({
+			name,
+			contact,
+			email,
+			gender,
+			age,
+			password: hashedPassword,
+			height,
+			weight,
+			healthPlan,
+			privacy
+		});
+
+		await newUser.save();
+		res.status(201).json({
+			message: "User registered successfully!",
+			bmi,
+			recommendedPlan: healthPlan,
+		});
+	} catch (error) {
+		console.error("Signup error:", error);
+		res.status(500).json({ message: "Internal server error" });
+	}
 };
 
 exports.login = async (req, res) => {
