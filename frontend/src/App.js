@@ -1,20 +1,18 @@
-const express = require('express');
-const router = express.Router();
-router.put("/profile/:id", async (req, res) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, {
-      $set: {
-        weight: req.body.weight,
-        height: req.body.height,
-        fitnessLevel: req.body.fitnessLevel,
-        foodHabit: req.body.foodHabit,
-      },
-    }, { new: true });
+import ProfileForm from "./components/ProfileForm"; 
+import DietPlan from './components/DietPlan';
 
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
-module.exports = router;
+function App() {
+  return (
+  <div>
+    <div className="App">
+      <ProfileForm userId="PUT_USER_ID_HERE" />
+    </div>
+    <div>
+      {/* Other components */}
+      <DietPlan />
+    </div>
+  </div>
+  );
+}
+export default App;
