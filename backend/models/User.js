@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema({
   // Add new fields here
   weight: Number,
   height: Number,
+  targetWeight: Number,
+  currentWeight: Number,
+  workoutPlan: String,
   fitnessLevel: {
     type: String,
     enum: ["Beginner", "Intermediate", "Advanced"],
