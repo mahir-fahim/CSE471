@@ -6,37 +6,51 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
 exports.signup = async (req, res) => {
-  try {
-    const { name, contact, email, gender, age, password, healthPlan, privacy } = req.body;
+	try {
+		const {
+			name,
+			contact,
+			email,
+			gender,
+			age,
+			password,
+			healthPlan,
+			privacy,
+		} = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ $or: [{ email }, { contact }] });
-    if (existingUser) {
-      return res.status(400).json({ message: 'User with this email or contact already exists.' });
-    }
+		// Check if user already exists
+		const existingUser = await User.findOne({
+			$or: [{ email }, { contact }],
+		});
+		if (existingUser) {
+			return res
+				.status(400)
+				.json({
+					message: "User with this email or contact already exists.",
+				});
+		}
 
 		// Hash password
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create and save new user
-    const newUser = new User({
-      name,
-      contact,
-      email,
-      gender,
-      age,
-      password: hashedPassword,
-      healthPlan,
-      privacy,
-    });
+		// Create and save new user
+		const newUser = new User({
+			name,
+			contact,
+			email,
+			gender,
+			age,
+			password: hashedPassword,
+			healthPlan,
+			privacy,
+		});
 
-    await newUser.save();
-    res.status(201).json({ message: 'User registered successfully!' });
-
-  } catch (error) {
-    console.error('Signup error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+		await newUser.save();
+		res.status(201).json({ message: "User registered successfully!" });
+	} catch (error) {
+		console.error("Signup error:", error);
+		res.status(500).json({ message: "Internal server error" });
+	}
 };
 
 exports.login = async (req, res) => {
@@ -87,7 +101,8 @@ exports.checkSession = (req, res) => {
 
 	try {
 		jwt.verify(token, JWT_SECRET);
-		res.status(200).json({ isAuthenticated: true });
+		const userId = jwt.decode(token).id;
+		res.status(200).json({ isAuthenticated: true, userId });
 	} catch {
 		res.status(200).json({ isAuthenticated: false });
 	}
