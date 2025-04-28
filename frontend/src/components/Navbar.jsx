@@ -42,6 +42,12 @@ function Navbar() {
 						<Link to="/view-goal" className="hover:underline">
 							View Goal
 						</Link>
+						<Link to="/workout" className="hover:underline">
+							Workout
+						</Link>
+						<Link to="/notifications" className="hover:underline">
+							Notifications
+						</Link>
 						{isAuthenticated && (
 							<>
 								<Link
