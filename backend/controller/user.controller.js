@@ -1,16 +1,11 @@
-<<<<<<< HEAD
 const User = require("../models/auth.model");
 const WorkoutPlan = require("../models/WorkoutPlan");
 const requireAuth = require("../middleware/auth");
-=======
-const User = require('../models/auth.model');
->>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
 
 // GET privacy setting
 exports.getPrivacySetting = async (req, res) => {
   try {
     const userId = req.user.id; // comes from JWT middleware
-<<<<<<< HEAD
     const user = await User.findById(userId).select("privacy");
 
     if (!user) return res.status(404).json({ message: "User not found" });
@@ -19,16 +14,6 @@ exports.getPrivacySetting = async (req, res) => {
   } catch (error) {
     console.error("Get privacy error:", error);
     res.status(500).json({ message: "Internal server error" });
-=======
-    const user = await User.findById(userId).select('privacy');
-
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    res.status(200).json({ privacy: user.privacy });
-  } catch (error) {
-    console.error('Get privacy error:', error);
-    res.status(500).json({ message: 'Internal server error' });
->>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
   }
 };
 
@@ -38,20 +23,14 @@ exports.updatePrivacySetting = async (req, res) => {
     const userId = req.user.id;
     const { privacy } = req.body;
 
-<<<<<<< HEAD
     if (typeof privacy !== "boolean") {
       return res.status(400).json({ message: "Privacy must be true or false" });
-=======
-    if (typeof privacy !== 'boolean') {
-      return res.status(400).json({ message: 'Privacy must be true or false' });
->>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
     }
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { privacy },
       { new: true }
-<<<<<<< HEAD
     ).select("privacy");
 
     res.status(200).json({
@@ -216,13 +195,3 @@ exports.getMe = async (req, res) => {
 };
 
 // req.user was set by requireAuth middleware
-=======
-    ).select('privacy');
-
-    res.status(200).json({ message: 'Privacy setting updated', privacy: updatedUser.privacy });
-  } catch (error) {
-    console.error('Update privacy error:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
->>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
