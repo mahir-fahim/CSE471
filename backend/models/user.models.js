@@ -25,12 +25,12 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Virtual BMI
-userSchema.virtual("bmi").get(function () {
-  if (this.height && this.weight) {
-    const heightInMeters = this.height / 100;
-    return +(this.weight / (heightInMeters * heightInMeters)).toFixed(1);
-  }
-  return null;
-});
+// userSchema.virtual("bmi").get(function () {
+//   if (this.height && this.weight) {
+//     const heightInMeters = this.height / 100;
+//     return +(this.weight / (heightInMeters * heightInMeters)).toFixed(1);
+//   }
+//   return null;
+// });
 
 module.exports = mongoose.model("User", userSchema);

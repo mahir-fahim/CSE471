@@ -14,6 +14,7 @@ function Signup() {
 		password: "",
 		healthPlan: "Basic",
 		privacy: false,
+		role: "member",
 	});
 	const { setIsAuthenticated } = useContext(AuthContext);
 	const navigate = useNavigate();
@@ -129,6 +130,22 @@ function Signup() {
 					<option value="Custom">Custom</option>
 				</select>
 			</div>
+			
+			<div className="mb-4">
+                <label className="block mb-2">Role</label>
+                <select
+                    name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                    required
+                >
+                    <option value="member">Member</option>
+                    <option value="admin">Admin</option>
+                    <option value="trainer">Trainer</option>
+					<option value="receptionist">Receptionist</option>
+                </select>
+            </div>
 			<div className="mb-4">
 				<label className="flex items-center">
 					<input
@@ -146,6 +163,7 @@ function Signup() {
 				className="bg-blue-500 text-white px-4 py-2 rounded"
 			>
 				Signup
+
 			</button>
 		</form>
 	);

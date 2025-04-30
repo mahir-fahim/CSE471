@@ -50,7 +50,12 @@ const userSchema = new Schema({
   privacy: {
     type: Boolean,
     default: false
-  }
+  },
+  role: {
+    type: String,
+    enum: ['member', 'admin', 'trainer','receptionist'],
+    default: 'member'
+  },  
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

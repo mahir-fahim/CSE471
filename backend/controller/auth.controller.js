@@ -1,33 +1,31 @@
-const User = require("../models/auth.model");
+const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Use a strong secret in production (store it in .env)
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
+// Signup controller
 exports.signup = async (req, res) => {
   try {
-    const { name, contact, email, gender, age, password, healthPlan, privacy } = req.body;
+    const { name, email, password, weight, height, role} = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findOne({ $or: [{ email }, { contact }] });
+    const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'User with this email or contact already exists.' });
+      return res.status(400).json({ message: 'User with this email already exists.' });
     }
 
-		// Hash password
-		const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create and save new user
     const newUser = new User({
       name,
-      contact,
       email,
-      gender,
-      age,
       password: hashedPassword,
-      healthPlan,
-      privacy,
+      weight,
+      height,
+	    role,
     });
 
     await newUser.save();
@@ -39,56 +37,40 @@ exports.signup = async (req, res) => {
   }
 };
 
+// Login controller
 exports.login = async (req, res) => {
-	try {
-		const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-		// Check if user exists
-		const user = await User.findOne({ email });
-		if (!user) return res.status(404).json({ message: "User not found" });
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-		// Compare password
-		const isMatch = await bcrypt.compare(password, user.password);
-		if (!isMatch)
-			return res.status(401).json({ message: "Invalid credentials" });
+    // Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
-		// Create JWT
-		const token = jwt.sign({ id: user._id }, JWT_SECRET, {
-			expiresIn: "1d",
-		});
+    // Create JWT
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1d" });
 
-		res.cookie("token", token, {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			maxAge: 24 * 60 * 60 * 1000,
-		});
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
 
-		res.status(200).json({
-			message: "Login successful",
-			user: { id: user._id, name: user.name },
-		});
-	} catch (error) {
-		console.error("Login error:", error);
-		res.status(500).json({ message: "Internal server error" });
-	}
+    res.status(200).json({
+      message: "Login successful",
+      user: { id: user._id, name: user.name },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
+// Logout controller
 exports.logout = (req, res) => {
-	res.clearCookie("token");
-	res.status(200).json({ message: "Logged out successfully" });
-};
-
-exports.checkSession = (req, res) => {
-	const token = req.cookies.token;
-
-	if (!token) {
-		return res.status(200).json({ isAuthenticated: false });
-	}
-
-	try {
-		jwt.verify(token, JWT_SECRET);
-		res.status(200).json({ isAuthenticated: true });
-	} catch {
-		res.status(200).json({ isAuthenticated: false });
-	}
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfully" });
 };
