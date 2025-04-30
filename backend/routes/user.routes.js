@@ -1,4 +1,5 @@
 // routes/user.routes.js
+<<<<<<< HEAD
 const express = require("express");
 const router = express.Router();
 const userController = require("../controller/user.controller");
@@ -19,5 +20,14 @@ router.get("/recommend/:userId", userController.recommendWorkout);
 //router.get("/:userId", userController.getUserById);
 
 router.get("/me", requireAuth, userController.getMe); // Get logged-in user
+=======
+const express = require('express');
+const router = express.Router();
+const userController = require('../controller/user.controller');
+const requireAuth = require('../middleware/auth');
+
+router.get('/privacy', requireAuth, userController.getPrivacySetting);
+router.put('/privacy', requireAuth, userController.updatePrivacySetting);
+>>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
 
 module.exports = router;
