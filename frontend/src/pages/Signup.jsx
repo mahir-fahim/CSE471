@@ -14,7 +14,10 @@ function Signup() {
 		password: "",
 		healthPlan: "Basic",
 		privacy: false,
+<<<<<<< HEAD
 		role: "member",
+=======
+>>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
 	});
 	const { setIsAuthenticated } = useContext(AuthContext);
 	const navigate = useNavigate();
@@ -130,6 +133,7 @@ function Signup() {
 					<option value="Custom">Custom</option>
 				</select>
 			</div>
+<<<<<<< HEAD
 			
 			<div className="mb-4">
                 <label className="block mb-2">Role</label>
@@ -146,6 +150,8 @@ function Signup() {
 					<option value="receptionist">Receptionist</option>
                 </select>
             </div>
+=======
+>>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
 			<div className="mb-4">
 				<label className="flex items-center">
 					<input
@@ -163,7 +169,10 @@ function Signup() {
 				className="bg-blue-500 text-white px-4 py-2 rounded"
 			>
 				Signup
+<<<<<<< HEAD
 
+=======
+>>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
 			</button>
 		</form>
 	);

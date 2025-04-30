@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const mongoose = require('mongoose');
 
 const workoutSessionSchema = new mongoose.Schema({
@@ -8,3 +9,20 @@ const workoutSessionSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 module.exports = mongoose.model('WorkoutSession', workoutSessionSchema);
+=======
+const mongoose = require("mongoose");
+
+const workoutSessionSchema = new mongoose.Schema({
+	userId: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+		required: true,
+	},
+	type: { type: String, required: true },
+	startTime: { type: Date, required: true },
+	endTime: { type: Date },
+	isScheduled: { type: Boolean, default: false },
+});
+
+module.exports = mongoose.model("WorkoutSession", workoutSessionSchema);
+>>>>>>> 42921392ffcf93c4a932bacaa52adb4830066f91
