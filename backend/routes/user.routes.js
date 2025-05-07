@@ -21,6 +21,7 @@ router.get("/recommend/:userId", userController.recommendWorkout);
 
 router.get("/me", requireAuth, userController.getMe); // Get logged-in user
 
+<<<<<<< HEAD
 router.get("/achievements/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -33,5 +34,43 @@ router.get("/achievements/:userId", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch achievements" });
   }
 });
+=======
+// POST /api/user/create – Create a new user
+router.post("/create", async (req, res) => {
+    const { weight, height, fitnessLevel, foodHabit } = req.body;
+  
+    try {
+      const newUser = new User({ weight, height, fitnessLevel, foodHabit });
+      const savedUser = await newUser.save();
+      res.status(201).json(savedUser);
+    } catch (error) {
+      console.error("Error creating user:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  // PUT /api/user/profile/:id – Update existing user
+  router.put("/profile/:id", async (req, res) => {
+    const { id } = req.params;
+    const { weight, height, fitnessLevel, foodHabit } = req.body;
+  
+    try {
+      const updatedUser = await User.findByIdAndUpdate(
+        id,
+        { weight, height, fitnessLevel, foodHabit },
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      res.json(updatedUser);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  });v
+>>>>>>> 83a1b58567f60fbbc1d7458994f0dfaf1566e104
 
 module.exports = router;
