@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
 import api from "../services/api";
 import { toast } from "react-hot-toast";
+import axios from "axios";
+
+const axiosInstance = axios.create({
+  baseURL: "http://localhost:5000/api",
+  withCredentials: true,
+});
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -15,6 +21,8 @@ function Signup() {
     healthPlan: "Basic",
     privacy: false,
     role: "member",
+    height: "",
+    weight: "",
   });
   const { setIsAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -23,14 +31,19 @@ function Signup() {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : name === "height" || name === "weight"
+          ? parseFloat(value) || ""
+          : value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/auth/signup", formData);
+      await axiosInstance.post("/auth/signup", formData);
       setIsAuthenticated(true);
       toast.success("Signup successful");
       navigate("/login");
@@ -62,6 +75,28 @@ function Signup() {
           type="text"
           name="contact"
           value={formData.contact}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2">Height</label>
+        <input
+          type="text"
+          name="height"
+          value={formData.height}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+      </div>
+      <div className="mb-4">
+        <label className="block mb-2">Weight</label>
+        <input
+          type="text"
+          name="weight"
+          value={formData.weight}
           onChange={handleChange}
           className="w-full p-2 border rounded"
           required

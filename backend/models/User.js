@@ -4,8 +4,10 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
+  contact: String,
+  milestoneProgress: { type: Number, default: 0 },
+  badges: { type: [String], default: [] },
   password: String,
-  // Add new fields here
   weight: Number,
   height: Number,
   targetWeight: Number,
@@ -21,4 +23,5 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Member", userSchema);
+// Check if the model is already compiled
+module.exports = mongoose.models.User || mongoose.model("User", userSchema);

@@ -1,6 +1,5 @@
 const User = require("../models/auth.model");
 const WorkoutPlan = require("../models/WorkoutPlan");
-const requireAuth = require("../middleware/auth");
 
 // GET privacy setting
 exports.getPrivacySetting = async (req, res) => {
@@ -168,18 +167,6 @@ exports.recommendWorkout = async (req, res) => {
     res.status(500).json({ error: "Failed to recommend workout plans" });
   }
 };
-
-// exports.getUser = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-
-//     const user = await User.findById(userId).select("-password -__v");
-//     if (!user) return res.status(404).json({ message: "User not found" });
-//     return res.status(200).json(user);
-//   } catch (error) {
-//     res.status(500).json({ message: "Internal server error" });
-//   }
-// };
 
 exports.getMe = async (req, res) => {
   try {

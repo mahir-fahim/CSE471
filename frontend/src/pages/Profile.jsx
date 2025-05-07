@@ -1,30 +1,37 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import WorkoutTimer from "../components/WorkoutTimer";
+import GetRecommendation from "../components/GetRecommendation";
+import Achievements from "../components/Achievements";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:5000/api",
   withCredentials: true,
 });
+
 const Profile = ({ userId }) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
+    contact: "",
   });
   const [message, setMessage] = useState("");
 
-  const response = async () => {
-    try {
-      const user = await axiosInstance.get("/user/me");
-      return user.data;
-    } catch (error) {
-      console.log("Error fetching user data:", error);
-    }
-  };
   useEffect(() => {
-    response();
-  }, []);
+    const fetchUserData = async () => {
+      try {
+        const response = await axiosInstance.get(`/user/me`);
+        const { name, email, contact } = response.data;
+        setFormData({ name, email, contact });
+      } catch (err) {
+        console.error("Failed to fetch user data:", err);
+      }
+    };
+
+    if (userId) {
+      fetchUserData();
+    }
+  }, [userId]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,7 +40,7 @@ const Profile = ({ userId }) => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/api/users/${userId}`, formData);
+      await axiosInstance.put(`/user/privacy/${userId}`, formData);
       setMessage("Profile updated successfully!");
     } catch (err) {
       console.error(err);
@@ -48,7 +55,7 @@ const Profile = ({ userId }) => {
       )
     ) {
       try {
-        await axios.delete(`/api/users/${userId}`);
+        await axiosInstance.delete(`/user/privacy/${userId}`);
         alert("Account deleted.");
         // Redirect or logout logic here
       } catch (err) {
@@ -85,9 +92,9 @@ const Profile = ({ userId }) => {
         <input
           className="w-full border p-2 rounded"
           type="text"
-          name="phone"
-          value={formData.phone}
-          placeholder="Phone"
+          name="contact"
+          value={formData.contact}
+          placeholder="Contact"
           onChange={handleChange}
         />
 
@@ -109,7 +116,12 @@ const Profile = ({ userId }) => {
       >
         Delete Account
       </button>
-      <WorkoutTimer userId="USER_ID_HERE" />
+
+      <Achievements userId={userId} />
+
+      <WorkoutTimer userId={userId} />
+
+      <GetRecommendation userId={userId} />
     </div>
   );
 };

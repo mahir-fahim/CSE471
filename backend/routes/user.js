@@ -1,15 +1,19 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 router.put("/profile/:id", async (req, res) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, {
-      $set: {
-        weight: req.body.weight,
-        height: req.body.height,
-        fitnessLevel: req.body.fitnessLevel,
-        foodHabit: req.body.foodHabit,
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          weight: req.body.weight,
+          height: req.body.height,
+          fitnessLevel: req.body.fitnessLevel,
+          foodHabit: req.body.foodHabit,
+        },
       },
-    }, { new: true });
+      { new: true }
+    );
 
     res.json(user);
   } catch (err) {
